@@ -2,10 +2,28 @@
 <html>
   <head>
     <title><%= title %></title>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
   <body>
     <h1><%= title %></h1>
     <p>Welcome to <%= title %></p>
+    <ul id="messages"></ul>
+    <form id="message_form" action="#">
+    	<input id="input_msg" /><button>send</button>
+    	<script type="text/javascript">
+    		var socket = io();
+    		$('#message_form').submit(function(){
+    			socket.emit('message',$('#input_msg').val());
+    			$('#input_msg').val('');
+    			return false;
+    		});
+    		socket.on('message',function(msg){
+    			$('#messages').append('<ul>'+msg+'</ul>');
+    		});
+
+    	</script>
+    </form>
   </body>
 </html>
