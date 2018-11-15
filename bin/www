@@ -30,15 +30,28 @@ server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
 
-
-
+let players=[];
+let p_num=0;
 io.on('connection',function(socket){
   console.log("connected");
   console.log(socket.id);
+  let player={
+    x:0,
+    y:0,
+    id:socket.id,
+    player_num:p_num++
+  };
+  players.push(player);
+  socket.emit("initialize",players);
+  socket.on('update',function(player_){
+    players[player_.player_num]=player_;
+    socket.emit('update',players);
+  });
   socket.on('message',function(msg){
     console.log("message: "+msg);
     io.emit('message',msg);
   });
+
 });
 /**
  * Normalize a port into a number, string, or false.
