@@ -51,6 +51,13 @@ io.on('connection',function(socket){
     console.log("message: "+msg);
     io.emit('message',msg);
   });
+  socket.on('disconnect',function(){
+    for(p of players){
+      if(p.id==socket.id){
+        players.splice(p.player_num,1);        
+      }
+    }
+  });
 
 });
 /**
