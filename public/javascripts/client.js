@@ -7,15 +7,14 @@ $(function(){
 	let players=[];
  	let you={
 	    x:0,
-	    y:0,
-	    id:socket.id
+	    y:0
   };
 
 	socket.on("initialize",function(players_){
 		players=players_;
-		for(let player of players){
-			if(socket.id==player.id){
-				you=player;
+		for(key in players){
+			if(socket.id==key){
+				you=players[key];
 			}
 		}
 	});
@@ -32,9 +31,9 @@ $(function(){
 	 function draw(){
 	 	ctx.clearRect(0,0,canvas.width,canvas.height);
 	 	draw_chara(you.x,you.y,20);
-	 	for(let p of players){
-	 		if(p.id!=you.id){
-	 			draw_chara(p.x,p.y,20);
+	 	for(key in players){
+	 		if(key!=socket.id){
+	 			draw_chara(players[key].x,players[key].y,20);
 	 		}
 	 	}
 	 	update_s();

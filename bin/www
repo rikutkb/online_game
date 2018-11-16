@@ -30,30 +30,23 @@ server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
 
-let players=[];
-let p_num=0;
+let players={};
 io.on('connection',function(socket){
   let player={
     x:0,
-    y:0,
-    id:socket.id,
-    player_num:p_num++
-  };
-  players.push(player);
+    y:0
+    };
+  players[socket.id]=player;
   socket.emit("initialize",players);
   socket.on('update',function(player_){
-    players[player_.player_num]=player_;
+    players[socket.id]=player_;
     socket.emit('update',players);
   });
   socket.on('message',function(msg){
     io.emit('message',msg);
   });
   socket.on('disconnect',function(){
-    for(p of players){
-      if(p.id==socket.id){
-        players.splice(p.player_num,1);        
-      }
-    }
+    delete players[socket.id];
   });
 
 });
